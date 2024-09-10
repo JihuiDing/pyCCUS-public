@@ -53,6 +53,8 @@ def wrt_cmgrwd_ts_special(sim_sr3='CCS_GEM',
             ext_file_name = f"{rwo_folder}\{ext_file_name}"
         elif cmg_version == 'ese-ts1win-v2023.20':
             ext_file_name = f"{rwo_folder}\{ext_file_name}"
+        elif cmg_version == 'ese-ts2win-v2024.20':
+            ext_file_name = f"{rwo_folder}\{ext_file_name}"
         elif cmg_version == 'stf-sherlock-v2020.10':
             ext_file_name = f"{rwo_folder}/{ext_file_name}"
         else:
@@ -115,6 +117,8 @@ def wrt_cmgrwd_grids(sim_sr3='CCS_GEM',
         if cmg_version == 'ese-win32-v2022.30':
             ext_file_name = f"{rwo_folder}\{ext_file_name}"
         elif cmg_version == 'ese-ts1win-v2023.20':
+            ext_file_name = f"{rwo_folder}\{ext_file_name}"
+        elif cmg_version == 'ese-ts2win-v2024.20':
             ext_file_name = f"{rwo_folder}\{ext_file_name}"
         elif cmg_version == 'stf-sherlock-v2020.10':
             ext_file_name = f"{rwo_folder}/{ext_file_name}"
