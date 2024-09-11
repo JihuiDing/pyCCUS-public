@@ -209,8 +209,12 @@ class pycmgresults():
         df0 = self.read_rwo2csv(os.path.join(folder, f'{sim}_{prop}_layer{layer_nums[0]}.rwo'))
 
         x_new, y_new, arr0 = self.xy_interp_to_arr(df=df0, 
-                                                   num_x=self.XY2arr_interp_num_x, num_y=self.XY2arr_interp_num_y, interp_method=self.XY2arr_interp_method, 
-                                                   query=time_query[0], x_dir_key=x_dir_key, y_dir_key=x_dir_key)
+                                                   num_x=self.XY2arr_interp_num_x, 
+                                                   num_y=self.XY2arr_interp_num_y, 
+                                                   interp_method=self.XY2arr_interp_method, 
+                                                   query=time_query[0], 
+                                                   x_dir_key=x_dir_key, 
+                                                   y_dir_key=y_dir_key) #JD: found issue "y_dir_key=x_dir_key"
 
         # Retire the old version, b/c it does not handle the case that X and Y do not align
         # arr0 = self.rwodf2arr(df=df0, query=time_query[0], x_dir_key='X', y_dir_key='Y')
