@@ -202,16 +202,17 @@ class pycmgcontrol():
         self.PRES_flag = self.read_PRES_rwo2npy(case_name=case_name, save=True)
         self.cmg2npy = [SG_temp, self.cmg2npy]
 
-        # Delete the rwo files
-        if self.SG_flag and self.PRES_flag:
-            try:
-                del_folder = os.path.join(self.simfolder, self.batchfolder, f'rwo_{case_name}')
-                shutil.rmtree(del_folder)
-            except:
-                if self.err_stop:
-                    raise ValueError(f'{case_name} SG & PRES cmgrst to npy are successful, but rwo folder not completely deleted ...')
-                else:
-                    print(f'{case_name} SG & PRES cmgrst to npy are successful, but rwo folder not completely deleted ...')
+#         JD not needed as cmgrst2npy handles deleting
+#         # Delete the rwo files
+#         if self.SG_flag and self.PRES_flag:
+#             try:
+#                 del_folder = os.path.join(self.simfolder, self.batchfolder, f'rwo_{case_name}')
+#                 shutil.rmtree(del_folder)
+#             except:
+#                 if self.err_stop:
+#                     raise ValueError(f'{case_name} SG & PRES cmgrst to npy are successful, but rwo folder not completely deleted ...')
+#                 else:
+#                     print(f'{case_name} SG & PRES cmgrst to npy are successful, but rwo folder not completely deleted ...')
 
     def read_SG_rwo2npy(self, case_name, save=True):
         cmgrst = pycmgresults()
@@ -358,7 +359,7 @@ class pycmgcontrol():
 
         elif self.proplist in [['SG','PRES'], ['PRES','SG']]:
             self.read_PRES_SG_from_rwo(case_name=casename)
-            self.save_done = False
+            self.save_done = True #JD changed from false to true, otherwise the following deleting wouldn't work
 
         elif self.proplist == ['Vertical Displacement from Geomechanics']:
             self.save_done = self.read_VERDSPLGEO_rwo2npy(case_name=casename, save=True)
