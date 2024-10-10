@@ -320,9 +320,40 @@ class pycmgcontrol():
             else:
                 print(f'{case_name} VERDSPLGEO has an error when reading rwo to npy ...')
             
+# JD add start (add other geomechanical parameters to extract results)
+    def read_GEORTYPE_rwo2npy(self, case_name, save=True):
+            cmgrst = pycmgresults()
+            cmgrst.XY2arr_interp_method = self.XY2arr_interp_method
+            cmgrst.XY2arr_interp_num_x = self.XY2arr_interp_num_x
+            cmgrst.XY2arr_interp_num_y = self.XY2arr_interp_num_y
 
+            rwo_dir = os.path.join(self.simfolder, self.batchfolder, f'rwo_{case_name}')
 
+            try:
 
+                x_new, y_new, GEORTYPE_arr = cmgrst.rwo_reader2arr(folder=rwo_dir,
+                                                                    sim=case_name,
+                                                                    prop='GEORTYPE',
+                                                                    layer_nums=self.layer_nums,
+                                                                    time_query=[f'GEORTYPE_{t}-Jan-01' for t in self.time_query],
+                                                                    x_dir_key=self.x_dir_key, y_dir_key=self.y_dir_key)
+
+                self.cmg2npy = GEORTYPE_arr
+                self.cmg2npy_x_coord = x_new
+                self.cmg2npy_y_coord = y_new
+                
+                if save == True:
+                    np.save(os.path.join(self.npy_folder, f"{case_name.split('.')[0]}_GEORTYPE.npy"), GEORTYPE_arr)
+                    return True
+                else:
+                    return GEORTYPE_arr
+                
+            except:
+                if self.err_stop:
+                    raise ValueError(f'{case_name} GEORTYPE has an error when reading rwo to npy ...')
+                else:
+                    print(f'{case_name} GEORTYPE has an error when reading rwo to npy ...')
+# JD add end
     
     def cmgrst2npy(self, caseid, verbose=False, rwodelete=True):
         """
@@ -332,7 +363,7 @@ class pycmgcontrol():
         
         if self.proplist in [['SG'], ['PRES'], ['SG','PRES'], ['PRES','SG']]:
             casename = f'case{caseid}'
-        elif self.proplist in [['Vertical Displacement from Geomechanics'], ['VERDSPLGEO']]:
+        elif self.proplist in [['Vertical Displacement from Geomechanics'], ['VERDSPLGEO'], ['GEORTYPE']]: #JD: add GEORTYPE
             casename = f'case{caseid}.gmch'
         else:
             if self.err_stop:
@@ -363,6 +394,9 @@ class pycmgcontrol():
 
         elif self.proplist == ['Vertical Displacement from Geomechanics']:
             self.save_done = self.read_VERDSPLGEO_rwo2npy(case_name=casename, save=True)
+
+        elif self.proplist == ['GEORTYPE']:
+            self.save_done = self.read_VERDSPLGEO_rwo2npy(case_name=casename, save=True) #JD add
 
         else:
             if self.err_stop:
