@@ -396,7 +396,7 @@ class pycmgcontrol():
             self.save_done = self.read_VERDSPLGEO_rwo2npy(case_name=casename, save=True)
 
         elif self.proplist == ['GEORTYPE']:
-            self.save_done = self.read_VERDSPLGEO_rwo2npy(case_name=casename, save=True) #JD add
+            self.save_done = self.read_GEORTYPE_rwo2npy(case_name=casename, save=True) #JD add
 
         else:
             if self.err_stop:
