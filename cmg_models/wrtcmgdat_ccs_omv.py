@@ -217,7 +217,114 @@ VISW 0.5									**Constant water viscosity (cP | cP)
 1.000000  1.000000  0.000000  0.000000
 
 *SGT		**a liquid-gas relative permeability table dependent on gas saturation
-0	0	0.7   'CMGTEMP_000.inc'
+**Sg        krg       krog     Pcog (from template GMGHG006)
+**0.000000  0.000000  0.000000  0.000000
+**0.050000  0.000080  0.000000  0.000000
+**0.100000  0.000680  0.000000  0.000000
+**0.150000  0.002330  0.000000  0.000000
+**0.200000  0.005610  0.000000  0.000000
+**0.250000  0.011140  0.000000  0.000000
+**0.300000  0.019610  0.000000  0.000000
+**0.350000  0.031740  0.000000  0.000000
+**0.400000  0.048370  0.000000  0.000000
+**0.450000  0.070420  0.000000  0.000000
+**0.500000  0.098940  0.000000  0.000000
+**0.550000  0.136180  0.000000  0.000000
+**0.600000  0.180650  0.000000  0.000000
+**0.650000  0.232750  0.000000  0.000000
+**0.700000  0.307520  0.000000  0.000000
+**0.750000  0.395200  0.000000  0.000000
+**0.800000  0.506570  0.000000  0.000000
+**0.850000  0.655620  0.000000  0.000000
+**0.900000  0.954430  0.000000  0.000000
+**0.950000  0.977220  0.000000  0.000000
+**1.000000  1.000000  0.000000  0.000000
+
+**Sg        krg       krog (from OMV HFU2-D-M)
+0	0	0.7
+8.7E-05	6E-06	0.7
+0.051176	0.004419	0.7
+0.10235	0.015687	0.7
+0.13	0.025205	0.7
+0.15353	0.033306	0.69095
+0.18118	0.046117	0.68032
+0.20471	0.05702	0.67127
+0.23235	0.073031	0.66063
+0.25588	0.086657	0.65158
+0.26	0.089526	0.65
+0.28353	0.10592	0.61177
+0.30706	0.12231	0.57482
+0.33471	0.14492	0.5314
+0.35824	0.16416	0.49686
+0.38588	0.18978	0.45628
+0.40941	0.21159	0.4243
+0.43706	0.24019	0.38672
+0.46059	0.26453	0.35739
+0.48824	0.29608	0.32293
+0.51177	0.32293	0.29608
+0.53941	0.35739	0.26453
+0.56294	0.38672	0.24019
+0.59059	0.4243	0.21159
+0.61412	0.45628	0.18978
+0.64177	0.49686	0.16416
+0.66529	0.5314	0.14492
+0.69294	0.57482	0.12231
+0.71647	0.61177	0.10592
+0.74	0.65	0.089526
+0.74412	0.65158	0.086657
+0.76765	0.66063	0.073031
+0.79529	0.67127	0.05702
+0.81882	0.68032	0.046117
+0.84647	0.69095	0.033306
+0.87	0.7	0.025205
+0.89765	0.7	0.015687
+0.94882	0.7	0.004419
+0.99991	0.7	6E-06
+1	0.7	0
+		
+***SGTI		** Imibibition liquid-gas relative permeability table dependent on gas saturation
+****Sg        krg       krog	(from OMV HFU2-IMB-M)
+****0	0	0.7
+****8.7E-05	0	0.7
+****0.054375	0	0.7
+****0.10875	0	0.7
+**0.13	0	0.7
+**0.16313	0	0.66688
+**0.18	0	0.65
+**0.18438	0	0.63438
+**0.2175	0	0.52365
+**0.23875	0	0.45262
+**0.27188	0	0.36115
+**0.29313	0	0.30247
+**0.32625	0	0.23019
+**0.3475	0	0.18383
+**0.38063	0	0.12998
+**0.40188	0	0.095432
+**0.435	0	0.059751
+**0.45	0	0.043593
+**0.45625	0.00098413	0.036861
+**0.48938	0.0062	0.018182
+**0.51063	0.018182	0.0062
+**0.54375	0.036861	0.00098413
+**0.55	0.043593	0
+**0.565	0.059751	0
+**0.59813	0.095432	0
+**0.61938	0.12998	0
+**0.6525	0.18383	0
+**0.67375	0.23019	0
+**0.70688	0.30247	0
+**0.72813	0.36115	0
+**0.76125	0.45262	0
+**0.7825	0.52365	0
+**0.81563	0.63438	0
+**0.82	0.65	0
+**0.83688	0.66688	0
+**0.87	0.7	0
+**0.89125	0.7	0
+**0.94563	0.7	0
+**0.99991	0.7	0
+**1	0.7	0
+
 *HYSKRG 0.15	** Gas Relative Permeability Hysteresis Parameter (Optional), Maximum residual gas saturation (fraction)
 
 **Rock Density for each gridblock used in calculation of adsorption of component from the gas, aqueous, or solid asphaltene phase onto the reservoir rock
@@ -226,7 +333,11 @@ VISW 0.5									**Constant water viscosity (cP | cP)
 **  ==============  INITIAL CONDITIONS  ======================
 
 *INITIAL
-   'CMGTEMP_001.inc'
+**VERTICAL: pressures are determined from the hydrostatic equation and saturations from the capillary pressure tables.
+**DEPTH_AVE: block saturations are to be assigned as averages of the corresponding saturations over the depth interval spanned by the grid block.
+**WATER_GAS: perform gravity-capillary equilibrium initialization for reservoirs with only water and gas phases initially present.
+**NOTRANZONE: the transition from the water to the gas zone is sharp
+**EQUIL: With *DEPTH_AVE options, add a pressure correction to each phase (during the simulation) in order that the reservoir initially be in gravitational equilibrium.
 *VERTICAL *DEPTH_AVE *WATER_GAS *NOTRANZONE *EQUIL
 
 *ZGAS		0.0001  0.9999		**nc real numbers representing the mole fractions of the nc components in the gas cap fluid in the first initialization region.
