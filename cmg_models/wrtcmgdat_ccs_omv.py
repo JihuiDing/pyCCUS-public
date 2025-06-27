@@ -70,7 +70,7 @@ RESULTS SIMULATOR GEM
 
 *GRID *CORNER 107 117 79
 *CORNERS   
-*include JD_Sula_2025_flow_seed0_corners.dat
+*include ../data/gridfiles/JD_Sula_2025_flow_seed0_corners.dat
 
 ***NETGROSS	*CON 1
 *NETGROSS	*IJK
@@ -96,10 +96,10 @@ PERMK  EQUALSI * 0.1
 **1:179 1:195 1:20 1
 **13 27 32 0
 *NULL *ALL
-*include JD_Sula_2025_flow_seed0_null_all.dat
+*include ../data/gridfiles/JD_Sula_2025_flow_seed0_null_all.dat
 
 *PINCHOUTARRAY *ALL
-*include JD_Sula_2025_flow_seed0_pinchoutarray_all.dat
+*include ../data/gridfiles/JD_Sula_2025_flow_seed0_pinchoutarray_all.dat
 
 
 ***VOLMOD *CON  1
@@ -287,7 +287,7 @@ ADTSC	100		*ON				**default nsteps=5
 
 *GEOGRID *GCORNER 107 117 10	
 *GCORNERS
-*include JD_Sula_2025_gmc_grid.dat
+*include ../data/gridfiles/JD_Sula_2025_gmc_grid.dat
 
 ** *GNULL *IJK					** Null blocks
 **     13   27   32
