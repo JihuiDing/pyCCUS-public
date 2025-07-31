@@ -8,6 +8,8 @@ data/
 Shell_code/
 CMGvsGEOSX/
 DGSA_InSAR/data/
+.DS_Store
+JD_folder/.DS_Store
 
 
 
