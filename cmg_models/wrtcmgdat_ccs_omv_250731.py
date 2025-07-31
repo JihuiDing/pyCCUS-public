@@ -29,19 +29,18 @@ RESULTS SIMULATOR GEM
 *INUNIT	*SI	**input data units
 
 **WPRN controls the frequency of writing data to the output print files.
-*WPRN	*WELL	0
-*WPRN	*GRID	0
+*WPRN	*WELL	*TIME
+*WPRN	*GRID	*TIME
 *WPRN	*ITER	*BRIEF
 **OUTPRN identifies what information is written to the output print file.
 *OUTPRN	*WELL	*ALL
+*OUTPRN *RES	*ALL
 *OUTPRN *GRID	*PRES DROP SW SO SG TEMP Y 'CO2' X 'CO2' W 'CO2' OBHLOSS VISO VISG IMPL
-*OUTPRN *RES	*NONE
 
 **WSRF controls how frequently well, special history, and/or grid information is written to the output Simulation Results File.
 *WSRF	*WELL		1
-*WSRF	*SPECIAL	1
 *WSRF	*GRID		*TIME
-***WSRF	*GRIDDEFORM	*TIME
+*WSRF	*GRIDDEFORM	*TIME
 **OUTSRF identifies what information is written to the Simulation Results file.
 *XDR		*ON	**External Data Representation (XDR) format to write SR2 binary file(s) 
 *OUTSRF		*RES	*ALL
@@ -49,6 +48,10 @@ RESULTS SIMULATOR GEM
 *OUTSRF		*GRID	*POROS *PERM *PRES *DROP *DATUMPRES *SG *SW *KRG *TEMP
 					*DENG  *DENW *RHOG *RHOW *VISG *VISW *PCW  *PCG  *SALIN
 					*RMOL 'CO2' *WALL *YALL *ZALL *MOLALITY 'CO2'
+**					*STRESI *STRESJ *STRESK *STRESSH *STRESEFF
+**					*STRAINI *STRAINJ *STRAINK *STRAINSH *STRNEPL
+**					*YOUNG *POISSON *YLDSTATE *VERDSPLGEO  *VDISPL
+**					*Z 'CO2' *W 'CO2' *MOLALITY 'CO2'
 
 ** Output CO2 inventory special history in mols, std volume, and mass units (from gmghg005)
 ** These keywords must appear on a line by itself.
@@ -67,28 +70,66 @@ RESULTS SIMULATOR GEM
 
 *GRID *CORNER 107 117 79
 *CORNERS   
-*include ../data/gridfiles/JD_Sula_2025_flow_corners.dat
+*include ../data/gridfiles/JD_Sula_2025_flow_seed0_corners.dat
 
+***NETGROSS	*CON 1
 *NETGROSS	*IJK
 1:107 1:117 1:40 0
 1:107 1:117 41:79 1
 
+***POR	*CON 0.1
+***POR	*KVAR  66*0.0001  13*0.2
 *POR	*ALL
 *include {self.params['PORO_file']}
 
+***PERMI	*CON 100
+***PERMI	*KVAR  66*0.0001  13*500
 *PERMI	*ALL
 *include {self.params['PERMX_file']}
 *PERMJ	*EQUALSI
+***PERMK	*EQUALSI
 PERMK  EQUALSI * 0.1
 
+**TRANSF	** Adjusts transmissibilities on a fault basis
+
+***NULL	*IJK
+**1:179 1:195 1:20 1
+**13 27 32 0
 *NULL *ALL
-*include ../data/gridfiles/JD_Sula_2025_flow_null_all.dat
+*include ../data/gridfiles/JD_Sula_2025_flow_seed0_null_all.dat
 
 *PINCHOUTARRAY *ALL
-*include ../data/gridfiles/JD_Sula_2025_flow_pinchoutarray_all.dat
+*include ../data/gridfiles/JD_Sula_2025_flow_seed0_pinchoutarray_all.dat
+
+
+***VOLMOD *CON  1
+***MOD
+**1:100	 1:2	1:11 = 1
+**1:100	 99:100 1:11 = 1
+**1:2    1:100  1:11 = 1
+**99:100 1:100  1:11 = 1
 
 *CPOR  4.35e-7		** rock compressibility in /kPa
 *PRPOR  100		** reference pressure for rock compressibility in kPa
+***CROCKTYPE 1		** reservoir rock
+**	**CP-ROCK 886	** Rock Heat Capacity in J/kg·K
+**	**THCONR0 3		** Thermal conductivity of rock in J/m·s·K
+**	*CPOR  4.35e-7	** rock compressibility in /kPa
+**	*PRPOR  100		** reference pressure for rock compressibility in kPa
+**	
+***CROCKTYPE 2		** shale
+**	**CP-ROCK 886	** Rock Heat Capacity in J/kg·K
+**	**THCONR0 1.73	** Thermal conductivity of rock in J/m·s·K
+**	*CPOR  4.35e-7	** rock compressibility in /kPa
+**	*PRPOR  100		** reference pressure for rock compressibility in kPa
+**
+*****CTYPE *KVAR  21*2  16*1  4*2 20*1 12*2 90*1
+***CTYPE *KVAR  66*2  13*1
+
+****define heat loss to the surrounding rock in the thermal simulation
+** *HEAT-LOSS *BOTTOM-TOP-BOUNDARY **Heat loss to take place from the edge, bottom and top of the reservoir
+** **rockden(kg/m3)  rockcp(J/kg·K) therm-cond(J/m·s·K)
+** *HLPROP 2650    886   1.73
 
 *END-GRID
 
@@ -139,6 +180,14 @@ PERMK  EQUALSI * 0.1
 DENW 1000									**mass density of the water component (kg/m3 | lb/ft3) at the reference pressure and reservoir temperature.
 VISW 0.5									**Constant water viscosity (cP | cP)
 
+***THERMAL *ON								**perform thermal simulation
+**ENTHCOEF	4.7780500E+00  1.1443300E-01  
+**			1.0113200E-04 -2.6494000E-08 
+**			3.4706000E-12 -1.3140000E-16 
+**			-5.5811400E+00  5.6483400E-01 
+**			-2.8297300E-04  4.1739900E-07 
+**			-1.5255760E-10  1.9588570E-14	**Coefficients for ideal enthalpy calculations. 6 coefficients are required per component.
+
 **  ==============  ROCK-FLUID PROPERTIES  ======================
 
 *ROCKFLUID
@@ -168,6 +217,29 @@ VISW 0.5									**Constant water viscosity (cP | cP)
 1.000000  1.000000  0.000000  0.000000
 
 *SGT		**a liquid-gas relative permeability table dependent on gas saturation
+**Sg        krg       krog     Pcog (from template GMGHG006)
+**0.000000  0.000000  0.000000  0.000000
+**0.050000  0.000080  0.000000  0.000000
+**0.100000  0.000680  0.000000  0.000000
+**0.150000  0.002330  0.000000  0.000000
+**0.200000  0.005610  0.000000  0.000000
+**0.250000  0.011140  0.000000  0.000000
+**0.300000  0.019610  0.000000  0.000000
+**0.350000  0.031740  0.000000  0.000000
+**0.400000  0.048370  0.000000  0.000000
+**0.450000  0.070420  0.000000  0.000000
+**0.500000  0.098940  0.000000  0.000000
+**0.550000  0.136180  0.000000  0.000000
+**0.600000  0.180650  0.000000  0.000000
+**0.650000  0.232750  0.000000  0.000000
+**0.700000  0.307520  0.000000  0.000000
+**0.750000  0.395200  0.000000  0.000000
+**0.800000  0.506570  0.000000  0.000000
+**0.850000  0.655620  0.000000  0.000000
+**0.900000  0.954430  0.000000  0.000000
+**0.950000  0.977220  0.000000  0.000000
+**1.000000  1.000000  0.000000  0.000000
+
 **Sg        krg       krog (from OMV HFU2-D-M)
 0	0	0.7
 8.7E-05	6E-06	0.7
@@ -210,6 +282,49 @@ VISW 0.5									**Constant water viscosity (cP | cP)
 0.99991	0.7	6E-06
 1	0.7	0
 		
+***SGTI		** Imibibition liquid-gas relative permeability table dependent on gas saturation
+****Sg        krg       krog	(from OMV HFU2-IMB-M)
+****0	0	0.7
+****8.7E-05	0	0.7
+****0.054375	0	0.7
+****0.10875	0	0.7
+**0.13	0	0.7
+**0.16313	0	0.66688
+**0.18	0	0.65
+**0.18438	0	0.63438
+**0.2175	0	0.52365
+**0.23875	0	0.45262
+**0.27188	0	0.36115
+**0.29313	0	0.30247
+**0.32625	0	0.23019
+**0.3475	0	0.18383
+**0.38063	0	0.12998
+**0.40188	0	0.095432
+**0.435	0	0.059751
+**0.45	0	0.043593
+**0.45625	0.00098413	0.036861
+**0.48938	0.0062	0.018182
+**0.51063	0.018182	0.0062
+**0.54375	0.036861	0.00098413
+**0.55	0.043593	0
+**0.565	0.059751	0
+**0.59813	0.095432	0
+**0.61938	0.12998	0
+**0.6525	0.18383	0
+**0.67375	0.23019	0
+**0.70688	0.30247	0
+**0.72813	0.36115	0
+**0.76125	0.45262	0
+**0.7825	0.52365	0
+**0.81563	0.63438	0
+**0.82	0.65	0
+**0.83688	0.66688	0
+**0.87	0.7	0
+**0.89125	0.7	0
+**0.94563	0.7	0
+**0.99991	0.7	0
+**1	0.7	0
+
 *HYSKRG 0.15	** Gas Relative Permeability Hysteresis Parameter (Optional), Maximum residual gas saturation (fraction)
 
 **Rock Density for each gridblock used in calculation of adsorption of component from the gas, aqueous, or solid asphaltene phase onto the reservoir rock
@@ -243,6 +358,34 @@ VISW 0.5									**Constant water viscosity (cP | cP)
 **Keyword *NORM and *MAXCHANGE may be over-ridden in presence of keyword *ADTSC, unless *ADTSC *ALLOW *NORMS_MAXCHANGES is in effect.
 ADTSC	100		*ON				**default nsteps=5
 
+****Typical changes in the basic variables over a timestep. 
+****The timestep size is adjusted internally such that the average change during a timestep equals the entered value.
+**NORM		*PRESS		500		**pressure (kPa | psi)
+**NORM		*SATUR		0.005
+**NORM		*GMOLAR		0.005
+**
+****Maximum changes in the basic variables during Newtonian iterations.
+****If any change in a variable value exceeds *MAXCHANGE, the timestep size is reduced and the timestep is repeated.
+**MAXCHANGE	*PRESS		10000	**pressure (kPa | psi), defaut 10000 kPa or 1450 psia
+**MAXCHANGE	*GMOLAR		0.8
+**MAXCHANGE	*SATUR		0.8
+**
+****Specifies the criterion for judging the convergence of the Newtonian iterations.
+****Two different types of convergence criterion are applied: a change criterion, in which relative changes in primary variables are checked, 
+****and a residual criterion, in which the residuals of the equations being set iteratively to zero are checked. 
+****If either criterion is satisfied, the iteration is judged to have converged.
+**CONVERGE	*PRESS		7.E-04	**changes convergence tolerance for pressure (kPa | psia), default 3.55 kPa or 0.514 psia
+**CONVERGE	*WATER		5.E-05	**relative changes convergence tolerance for water molar density (dimensionless), defaut 0.01
+**CONVERGE	*TEMP		1.E-03	**relative changes convergence tolerance for temperature (°C | °F), 0.001 °C or °F
+**CONVERGE	*HC			5.E-05	**relative changes convergence tolerance for a hydrocarbon component molar density (dimensionless), defaut 0.01
+**CONVERGE	*MAXRES		1.E-04	**maximum scaled residual allowed for any single equation at convergence (dimensionless), defaut 0.001
+**
+**DTMIN		1.E-06				**minimum timestep size (days | days ), default 1.E-05 days
+**DTMAX		182.5				**maximum timestep size (days | days ), default 365 days
+**
+**NORTH		60					**maximum number of orthogonalizations (GMRES steps) performed before resetting, which affects the amount of storage used, default 40
+
+
 **  ==============  GEOMECHANIC SECTION  ====================
 
 *GEOMECH						** Main keyword for using geomechanics module
@@ -257,6 +400,32 @@ ADTSC	100		*ON				**default nsteps=5
 *GCORNERS
 *include ../data/gridfiles/JD_Sula_2025_gmc_grid.dat
 
+** *GNULL *IJK					** Null blocks
+**     13   27   32
+
+**GPTOLMUL  0.7					**Pressure tolerance multiplier used in computing coefficients for porosity formulae, default 1
+**STRESSTOL 0.07				**Maximum allowed stress difference allowed for each grid block (kPa | psi), range is 0 to 10 kPa (0 to 1.45 psi).
+								**At most one of *PRESSTOL, *STRESSTOL and *POROSTOL is used.
+
+** Note: The yielding stress has a high value to avoid plastics occuring.
+***GEOROCK 1						**reservoir rock
+**	*ELASTMOD		2E+07		** Elastic Young's modulus (kPa)
+**	*POISSRATIO		0.3			** Poisson's ratio
+**	*COHESION		1E+10		** Cohesion for Mohr-Coulomb and Drucker-Prager materials (kPa)
+**	*HARDEN			0			** Hardening parameter for the linear strain hardening option (kPa).
+**	*FRICANGLE		28.0		** Friction angle (degrees)
+**	*BIOTSCOEF		1			** Biot's coefficient
+**	*THEXPCOEF   	4E-06		** linear thermal expansion coefficient for solid rock (1/C)
+**
+***GEOROCK 2						** shale
+**	*ELASTMOD		1E+07
+**	*POISSRATIO		0.3
+**	*COHESION		1E+10
+**	*HARDEN			0
+**	*FRICANGLE		28.0
+**	*BIOTSCOEF		1
+**	*THEXPCOEF   	4E-06
+**
 ***GEOTYPE *KVAR  33*2  6*1
 **use same geomechanical parameters for all formations
 *ELASTMOD		{self.params['E_GPa']}
@@ -267,9 +436,13 @@ ADTSC	100		*ON				**default nsteps=5
 *BIOTSCOEF		1
 *THEXPCOEF   	4E-06
 
+****Assign the initial stress distribution for 3D finite elements (kPa | psi)
+**			**sigma_x	sigma_y	sigma_z	sigma_xy	sigma_yz	sigma_xz
+***STRESS3D	3E+04		3E+04	3E+04	0			0			0
+
 **Assign the initial stress gradient distribution for 3D finite elements (kPa/m | psi/ft)
 				**strgrd_x	strgrd_y	strgrd_z	strgrd_xy	strgrd_yz	strgrd_xz (derived from OMV data)
-*STRESSGRAD3D	{self.params['sigma_x']} {self.params['sigma_y']} {self.params['Sv_MPa/km']} {self.params['tau_xy']} 0 0
+*STRESSGRAD3D	{self.params['sigma_x']}		{self.params['sigma_y']}		{self.params['Sv_MPa/km']}			{self.params['tau_xy']}			0			0
 
 *PRESCBC3D	**Prescribe displacement-type boundary conditions on a nodal point of a 3D finite element
 *IJK  1:107 1:117  10
@@ -301,12 +474,27 @@ YLDSTATE **yield stress state with 0-4 indicators
 *WELL		4 'I05_4km'
 *WELL		5 'I06_4km'
 
+***INJECTOR	1
 *INJECTOR	1:5
 *INCOMP		*SOLVENT  1.0  0.0			**compositions of injected fluid
 *OPERATE	*MAX  *STG  2.2e+06   *CONT	**surface gas rate (m3/day | ft3/day ) constraint, equivalent to 1.48 million ton per year
+***OPERATE	*MAX  *BHP  34000   *CONT	**bottom-hole pressure (kPa | psi ) constraint
+
+***INJECTOR	'I02_4km'
+***OPERATE	*MAX  *BHP  34000   *CONT	**bottom-hole pressure (kPa | psi ) constraint
+***INJECTOR	'I03_4km'
+***OPERATE	*MAX  *BHP  31700   *CONT	**bottom-hole pressure (kPa | psi ) constraint
+***INJECTOR	'I04_4km'
+***OPERATE	*MAX  *BHP  29700   *CONT	**bottom-hole pressure (kPa | psi ) constraint
+***INJECTOR	'I05_4km'
+***OPERATE	*MAX  *BHP  28300   *CONT	**bottom-hole pressure (kPa | psi ) constraint
+***INJECTOR	'I06_4km'
+***OPERATE	*MAX  *BHP  27900   *CONT	**bottom-hole pressure (kPa | psi ) constraint
 
 *INJ-TEMP	1:5	
 			5*20							**temperature of injected fluid  (C | F)
+***INJ-TEMP	'I02_4km'	
+**			20							**temperature of injected fluid  (C | F)
 						
 **well geometric characteristics used for calculating well index internally
 	**direction radius(m|ft)  geometricFactor  wfrac  skin
@@ -414,17 +602,25 @@ YLDSTATE **yield stress state with 0-4 indicators
 51 87 77   1.0  
 51 87 78   1.0  
 51 87 79   1.0  
-*DATE 2032 1 1
-***DATE 2040 1 1
-***DATE 2050 1 1
-***SHUTIN		1:5
-***DATE 2060 1 1
-***GCUPDATE	*TIME
+
+*DATE 2040 1 1
+*DATE 2050 1 1
+*SHUTIN		1:5
+
+*DATE 2055 1 1
+*DATE 2060 1 1
+*GCUPDATE	*TIME
+
+*DATE 2150 1 1
+*DATE 2250 1 1
+*DATE 2450 1 1
+*DATE 2650 1 1
+*DATE 3050 1 1
+
 ***DATE 2550 1 1
 ***DATE 3050 1 1
 
 *STOP
-
               """, file = fileID)
 
 
