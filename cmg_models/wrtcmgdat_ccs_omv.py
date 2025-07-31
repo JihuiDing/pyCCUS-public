@@ -33,8 +33,8 @@ RESULTS SIMULATOR GEM
 *WPRN	*GRID	0
 *WPRN	*ITER	*BRIEF
 **OUTPRN identifies what information is written to the output print file.
-*OUTPRN	*WELL	*ALL
-*OUTPRN *GRID	*PRES DROP SW SO SG TEMP Y 'CO2' X 'CO2' W 'CO2' OBHLOSS VISO VISG IMPL
+*OUTPRN	*WELL	*BRIEF
+*OUTPRN *GRID	*NONE
 *OUTPRN *RES	*NONE
 
 **WSRF controls how frequently well, special history, and/or grid information is written to the output Simulation Results File.
