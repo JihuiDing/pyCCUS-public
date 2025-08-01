@@ -67,7 +67,7 @@ RESULTS SIMULATOR GEM
 
 *GRID *CORNER 107 117 79
 *CORNERS   
-*include ../data/gridfiles/JD_Sula_2025_flow_corners.dat
+*include data_gridfiles/JD_Sula_2025_flow_corners.dat
 
 *NETGROSS	*IJK
 1:107 1:117 1:40 0
@@ -82,10 +82,10 @@ RESULTS SIMULATOR GEM
 PERMK  EQUALSI * 0.1
 
 *NULL *ALL
-*include ../data/gridfiles/JD_Sula_2025_flow_null_all.dat
+*include data_gridfiles/JD_Sula_2025_flow_null_all.dat
 
 *PINCHOUTARRAY *ALL
-*include ../data/gridfiles/JD_Sula_2025_flow_pinchoutarray_all.dat
+*include data_gridfiles/JD_Sula_2025_flow_pinchoutarray_all.dat
 
 *CPOR  4.35e-7		** rock compressibility in /kPa
 *PRPOR  100		** reference pressure for rock compressibility in kPa
@@ -255,7 +255,7 @@ ADTSC	100		*ON				**default nsteps=5
 
 *GEOGRID *GCORNER 107 117 10	
 *GCORNERS
-*include ../data/gridfiles/JD_Sula_2025_gmc_grid.dat
+*include data_gridfiles/JD_Sula_2025_gmc_grid.dat
 
 ***GEOTYPE *KVAR  33*2  6*1
 **use same geomechanical parameters for all formations
@@ -414,14 +414,14 @@ YLDSTATE **yield stress state with 0-4 indicators
 51 87 77   1.0  
 51 87 78   1.0  
 51 87 79   1.0  
-*DATE 2032 1 1
-**DATE 2040 1 1
-**DATE 2050 1 1
-**SHUTIN		1:5
-**DATE 2060 1 1
-**GCUPDATE	*TIME
-**DATE 2550 1 1
-**DATE 3050 1 1
+
+*DATE 2040 1 1
+*DATE 2050 1 1
+*SHUTIN		1:5
+*DATE 2060 1 1
+*GCUPDATE	*TIME
+*DATE 2550 1 1
+*DATE 3050 1 1
 
 *STOP
 
