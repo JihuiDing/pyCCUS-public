@@ -81,9 +81,6 @@ RESULTS SIMULATOR GEM
 *PERMJ	*EQUALSI
 PERMK  EQUALSI * 0.1
 
-**TRANSF	** Adjusts transmissibilities on a fault basis
-*include data_gridfiles/JD_Sula_2025_flow_transf.dat
-
 *NULL *ALL
 *include data_gridfiles/JD_Sula_2025_flow_null_all.dat
 
@@ -260,24 +257,19 @@ ADTSC	100		*ON				**default nsteps=5
 *GCORNERS
 *include data_gridfiles/JD_Sula_2025_gmc_grid.dat
 
-*GNULL *IJK
-1:107	1:117	1:5
-
 ***GEOTYPE *KVAR  33*2  6*1
 **use same geomechanical parameters for all formations
-*ELASTMOD		{self.params['E_GPa']}		** Elastic Young's modulus (kPa)
-*POISSRATIO		{self.params['PR']}			** Poisson's ratio
-*COHESION		1E+10			** Cohesion for Mohr-Coulomb and Drucker-Prager materials (kPa)
-*HARDEN			0				** Hardening parameter for the linear strain hardening option (kPa).
-*FRICANGLE		28.0			** Friction angle (degrees)
-*BIOTSCOEF		1				** Biot's coefficient
-*THEXPCOEF   	4E-06			** linear thermal expansion coefficient for solid rock (1/C)
+*ELASTMOD		{self.params['E_GPa']}
+*POISSRATIO		{self.params['PR']}
+*COHESION		1E+10
+*HARDEN			0
+*FRICANGLE		28.0
+*BIOTSCOEF		1
+*THEXPCOEF   	4E-06
 
 **Assign the initial stress gradient distribution for 3D finite elements (kPa/m | psi/ft)
 				**strgrd_x	strgrd_y	strgrd_z	strgrd_xy	strgrd_yz	strgrd_xz (derived from OMV data)
-*STRESS3D  8324.56		4833.62		8525.96		3023.25		0	0  **stress state of the reference block
 *STRESSGRAD3D	{self.params['sigma_x']} {self.params['sigma_y']} {self.params['Sv_MPa/km']} {self.params['tau_xy']} 0 0
-*GEORBLOCK 50 1 6	**reference block
 
 *PRESCBC3D	**Prescribe displacement-type boundary conditions on a nodal point of a 3D finite element
 *IJK  1:107 1:117  10
@@ -289,7 +281,6 @@ ADTSC	100		*ON				**default nsteps=5
 PRES	TEMP	GEORTYPE	YOUNG	POISSON
 STRESI  STRESJ  STRESK  STRESNORM 
 STRAINI STRAINJ STRAINK	STRAINVOL
-STRESMXP STRESMNP STRESINT PRMXDIR PRMNDIR STRESSHMX STRESNORM STRESSH
 VERDSPLGEO	**Vertical displacement "up" based on geomechanics, at centre of cell
 VDISPL	**Vector of grid displacement
 YLDSTATE **yield stress state with 0-4 indicators
