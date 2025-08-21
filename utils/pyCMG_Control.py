@@ -126,7 +126,7 @@ class pycmgcontrol():
                 print(f'{case_name_suffix} run CMG GEM step encounters an error ...')
 
     def wrt_rwd_report(self, case_name, verbose=False):
-        print(f"writing rwd file for {case_name} ...") # 250821 JD: add this to show progress.
+        print(f"{case_name}: writing rwd file ...") # 250821 JD: add this to show progress.
         # write cmg rwd file to simfolder
         wrtfolder = os.path.join(self.simfolder, self.batchfolder)
         wrt_cmgrwd_grids(sim_sr3=case_name,
@@ -183,7 +183,7 @@ class pycmgcontrol():
             else:
                 print(f'The CMG version {self.cmg_version} is not implemented in run_rwd_report function of pycmgcontrol() class .....')
             
-        print(f"generating rwo file for {case_name} ...") # 250821 JD: add this to show progress.
+        print(f"{case_name}: generating rwo file ...") # 250821 JD: add this to show progress.
         # Execute the CMG software using the files we defined.
         # cmd_line = 'cd ' + cd_path + '  & ' + exe_path + '  -f ' + f'{case_name}' + '.rwd'
         # work_version = 'cd ' + cd_path + ' & ' + exe_path + '  -f ' + f'"case{case_name}"' + '.rwd'
@@ -198,7 +198,6 @@ class pycmgcontrol():
                 print(f'{case_name} run rwd step encounters an error ...')
 
     def read_PRES_SG_from_rwo(self, case_name):
-        print(f"reading SG and PRES from rwo file to npy for {case_name} ...") # 250821 JD: add this to show progress.
         # Read SG and PRES arrays
         self.SG_flag = self.read_SG_rwo2npy(case_name=case_name, save=True)
         SG_temp = self.cmg2npy
@@ -218,7 +217,7 @@ class pycmgcontrol():
 #                     print(f'{case_name} SG & PRES cmgrst to npy are successful, but rwo folder not completely deleted ...')
 
     def read_SG_rwo2npy(self, case_name, save=True):
-        print(f"reading SG from rwo file to npy for {case_name} ...") # 250821 JD: add this to show progress.
+        print(f"{case_name}: reading SG from rwo file to npy ...") # 250821 JD: add this to show progress.
         cmgrst = pycmgresults()
         cmgrst.XY2arr_interp_method = self.XY2arr_interp_method
         cmgrst.XY2arr_interp_num_x = self.XY2arr_interp_num_x
@@ -249,7 +248,7 @@ class pycmgcontrol():
                 print(f'{case_name} gas saturation has an error when reading rwo to npy ...')
         
     def read_PRES_rwo2npy(self, case_name, save=True):
-        print(f"reading PRES from rwo file to npy for {case_name} ...") # 250821 JD: add this to show progress.
+        print(f"{case_name}: reading PRES from rwo file to npy ...") # 250821 JD: add this to show progress.
         cmgrst = pycmgresults()
         cmgrst.XY2arr_interp_method = self.XY2arr_interp_method
         cmgrst.XY2arr_interp_num_x = self.XY2arr_interp_num_x
@@ -281,7 +280,7 @@ class pycmgcontrol():
             
         
     def read_VERDSPLGEO_rwo2npy(self, case_name, save=True):
-        print(f"reading VERDSPLGEO from rwo file to npy for {case_name} ...") # 250821 JD: add this to show progress.
+        print(f"{case_name}: reading VERDSPLGEO from rwo file to npy ...") # 250821 JD: add this to show progress.
         cmgrst = pycmgresults()
         cmgrst.XY2arr_interp_method = self.XY2arr_interp_method
         cmgrst.XY2arr_interp_num_x = self.XY2arr_interp_num_x
@@ -328,7 +327,7 @@ class pycmgcontrol():
             
 # JD add start (add other geomechanical parameters to extract results)
     def read_GEORTYPE_rwo2npy(self, case_name, save=True):
-            print(f"reading GEORTYPE from rwo file to npy for {case_name} ...") # 250821 JD: add this to show progress.
+            print(f"{case_name}: reading GEORTYPE from rwo file to npy ...") # 250821 JD: add this to show progress.
             cmgrst = pycmgresults()
             cmgrst.XY2arr_interp_method = self.XY2arr_interp_method
             cmgrst.XY2arr_interp_num_x = self.XY2arr_interp_num_x
