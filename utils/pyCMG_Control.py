@@ -186,7 +186,8 @@ class pycmgcontrol():
         # Execute the CMG software using the files we defined.
         # cmd_line = 'cd ' + cd_path + '  & ' + exe_path + '  -f ' + f'{case_name}' + '.rwd'
         # work_version = 'cd ' + cd_path + ' & ' + exe_path + '  -f ' + f'"case{case_name}"' + '.rwd'
-        cmd_line = f"cd {cd_path}  & {exe_path} -f {case_name}.rwd"
+        # cmd_line = f"cd {cd_path}  & {exe_path} -f {case_name}.rwd"
+        cmd_line = f"cd {cd_path}  & {exe_path} -f {case_name}.rwd -o {case_name}" # JD 250821
         try:
             os.system(cmd_line)
         except:
